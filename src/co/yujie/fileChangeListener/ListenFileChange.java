@@ -1,21 +1,18 @@
 package co.yujie.fileChangeListener;
 
 import org.eclipse.core.internal.events.ResourceDelta;
-import org.eclipse.core.internal.events.ResourceDeltaFactory;
-import org.eclipse.core.internal.resources.Workspace;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaElementDelta;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IStartup;
-
-import java.util.Date;
-
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.FileEditorInput;
 import org.apache.log4j.Logger;
 
 import co.yujie.fileChangeListener.model.ExtendResourceDelta;
@@ -46,19 +43,33 @@ public class ListenFileChange implements IStartup {
 			@Override
 			public void elementChanged(ElementChangedEvent event) {
 				
-				System.out.println("----event: " + event);
-				IJavaElementDelta d = event.getDelta();
-				System.out.println("-----source: " + d);
-				if(event != null && event.getType() == 1) {  //type 为1时表示操作文件
-					FileChangeInfo info = convert(event);
+				if(event != null && null != PlatformUI.getWorkbench().getActiveWorkbenchWindow()) {
+					//FileChangeInfo info = convert(event);
+					FileChangeInfo info = convertByWindow(event);
 					if(null != info) {
 						log.info(info);
 					}
 				}
 			}
-		});
+		}, 1);
 		
 		log.debug("插件加载完成");
+	}
+	
+	/**
+	 * 转化为文件修改描述信息类
+	 * @param event
+	 * @return
+	 */
+	private FileChangeInfo convertByWindow(ElementChangedEvent event) {
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IEditorPart editor = page.getActiveEditor();
+        if(null != editor) {
+        	FileEditorInput input = (FileEditorInput) editor.getEditorInput();
+        	IFile file = input.getFile();
+        	return new FileChangeInfo(file.getFullPath().toString(), getKind(event.getDelta().getKind()), file.getFileExtension(), file.getName(), input.getStorage().toString(), file.getLocation().toString());
+        }
+        return null;
 	}
 	
 	/**
