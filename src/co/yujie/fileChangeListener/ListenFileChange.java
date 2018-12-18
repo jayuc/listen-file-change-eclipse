@@ -48,6 +48,13 @@ public class ListenFileChange implements IStartup {
 					FileChangeInfo info = convertByWindow(event);
 					if(null != info) {
 						log.info(info);
+						
+						/**
+						 * //在这里监听文件入口
+						 * dothing...
+						 */
+						
+						
 					}
 				}
 			}
@@ -85,7 +92,6 @@ public class ListenFileChange implements IStartup {
 		}else {
 			resource = event.getDelta().getResourceDeltas()[0];
 		}
-		System.out.println("--------e: " + resource);
 		if(resource != null) {
 			IPath path = resource.getFullPath();
 			FileChangeInfo info = new FileChangeInfo(path.toString(), getKind(resource.getKind()), path.getFileExtension());
