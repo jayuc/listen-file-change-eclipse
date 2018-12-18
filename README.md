@@ -14,4 +14,6 @@
 ## 怎么打印日志？
 1.在eclipse工作空间 -> .metadata -> .plugins -> co.yujie.fileChangeListener 文件夹下面添加日志配置文件，日志配置文件采用log4j配置文件。如下图： </br>
 ![export2](https://raw.githubusercontent.com/ZhaoXiCeil/listen-file-change-eclipse/master/profile/log1.jpg) </br>
+2.日志配置如下图： </br>
+![export2](https://raw.githubusercontent.com/ZhaoXiCeil/listen-file-change-eclipse/master/profile/log2.jpg) </br>
 
