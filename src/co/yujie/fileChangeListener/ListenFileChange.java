@@ -18,10 +18,11 @@ import org.apache.log4j.Logger;
 import co.yujie.fileChangeListener.model.ExtendResourceDelta;
 import co.yujie.fileChangeListener.model.FileChangeInfo;
 import co.yujie.fileChangeListener.model.FileOperate;
+import co.yujie.fileChangeListener.util.ConfigUtil;
 import co.yujie.fileChangeListener.util.LogUtil;
 
 /**
- *    项目入口文件
+ * 项目入口文件
  * @author yujie
  *
  */
@@ -37,6 +38,8 @@ public class ListenFileChange implements IStartup {
 	public void earlyStartup() {
 
 		log.debug("开始加载插件");
+		
+		beforeEarlyStartup();
 		
 		JavaCore.addElementChangedListener(new IElementChangedListener() {
 			
@@ -60,7 +63,33 @@ public class ListenFileChange implements IStartup {
 			}
 		}, 1);
 		
+		afterEarlyStartup();
+		
 		log.debug("插件加载完成");
+	}
+	
+	/**
+	 * earlyStartup 执行前执行
+	 */
+	private void beforeEarlyStartup() {
+		
+		log.debug("开始  earlyStartup 执行前执行");
+		
+		ConfigUtil.loadConfigs();
+		
+		log.debug("结束  earlyStartup 执行前执行");
+		
+	}
+	
+	/**
+	 * earlyStartup 执行后执行
+	 */
+	private void afterEarlyStartup() {
+		
+		log.debug("开始  earlyStartup 执行后执行");
+		
+		log.debug("结束  earlyStartup 执行后执行");
+		
 	}
 	
 	/**

@@ -8,9 +8,6 @@ import java.util.Properties;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
 
 /**
  * 日志管理类
@@ -19,14 +16,13 @@ import org.eclipse.core.runtime.Plugin;
  */
 public class LogUtil {
 	
-	public static Logger log = LogManager.getLogger(LogUtil.class);
+	private static Logger log = LogManager.getLogger(LogUtil.class);
 	
 	/**
 	 * 加载配置文件，默认在工作空间中插件文件夹下
 	 */
 	static {
-		String workPlugPath = Platform.getInstanceLocation().getURL().getPath() + 
-				".metadata/.plugins/co.yujie.fileChangeListener/";
+		String workPlugPath = ConfigUtil.getWorkPlugPath();
 		File dir = new File(workPlugPath);
 		if(dir.exists()) {
 			File file = new File(workPlugPath + "log4j.properties");
@@ -40,8 +36,6 @@ public class LogUtil {
 				}
 				PropertyConfigurator.configure(properties);
 			}
-		}else {
-			dir.mkdirs();
 		}
 	}
 	
