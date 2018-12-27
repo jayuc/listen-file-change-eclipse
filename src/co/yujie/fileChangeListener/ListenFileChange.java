@@ -15,6 +15,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.apache.log4j.Logger;
 
+import co.yujie.fileChangeListener.iter.Compiler;
+import co.yujie.fileChangeListener.iter.Judger;
 import co.yujie.fileChangeListener.model.ExtendResourceDelta;
 import co.yujie.fileChangeListener.model.FileChangeInfo;
 import co.yujie.fileChangeListener.model.FileOperate;
@@ -57,6 +59,13 @@ public class ListenFileChange implements IStartup {
 						 * dothing...
 						 */
 						
+						/**
+						 * 执行一个js编译器
+						 */
+						if(Judger.haveConfig() 
+								&& Judger.mateContext(info)) {
+							Compiler.compile(info);   //开始编译js文件
+						}
 						
 					}
 				}
@@ -113,6 +122,7 @@ public class ListenFileChange implements IStartup {
 	 * @param event
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private FileChangeInfo convert(ElementChangedEvent event) {
 		IJavaElementDelta[] deltas = event.getDelta().getAffectedChildren();
 		IResourceDelta resource = null;

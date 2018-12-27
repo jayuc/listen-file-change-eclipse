@@ -5,7 +5,10 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.log4j.Logger;
+
 import co.yujie.fileChangeListener.model.FileChangeInfo;
+import co.yujie.fileChangeListener.util.LogUtil;
 
 /**
  * 编译器
@@ -21,6 +24,8 @@ public final class Compiler {
 	private final static Object statusLock = new Object();
 	
 	private final static Object remainLock = new Object();
+	
+	private final static Logger log = LogUtil.getLog(Compiler.class);
 	
 	private Compiler() {
 		
@@ -43,12 +48,14 @@ public final class Compiler {
 	public static void compile(FileChangeInfo info) {
 		if(shouldCompile()) {
 			executor.submit(() -> {
+				log.debug("开始编译");
 				setStatus(Boolean.TRUE);
 				IAction action = new JsAction();
 				Map<String, Object> data = new HashMap<String, Object>();
 				data.put("compiler", compiler);
 				data.put("fileChangeInfo", info);
 				action.execute(data);
+				log.debug("结束编译");
 			});
 		}
 	}
@@ -64,7 +71,9 @@ public final class Compiler {
 			if(!isRemain()) {
 				setRemain(Boolean.TRUE);
 			}
+			log.debug("是否有预留编译任务：" + isRemain());
 		}
+		log.debug("是否正在编译：" + isStatus());
 		return false;
 	}
 

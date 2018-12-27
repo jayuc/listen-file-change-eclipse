@@ -31,9 +31,14 @@ public class ConfigUtil {
 	private static String outPath = null;
 	
 	/**
-	 * 编译模式  开发环境/生产环境
+	 * 编译模式  开发环境/生产环境,默认开发环境
 	 */
-	private static String model = null;
+	private static String model = "development";
+	
+	/**
+	 * 生效的文件类型
+	 */
+	private static String fileType = "js";
 	
 	/**
 	 * 插件工作空间位置
@@ -63,8 +68,15 @@ public class ConfigUtil {
 			}
 			webpackPrefix = properties.getProperty("webpackPrefix");
 			context = properties.getProperty("context");
-			model = properties.getProperty("model");
 			outPath = properties.getProperty("outPath");
+			String outP = properties.getProperty("model");
+			if(null != outP) {
+				model = outP;
+			}
+			String fileT = properties.getProperty("fileType");
+			if(null != fileT) {
+				//fileType = fileT;
+			}
 		}
 	}
 	
@@ -72,13 +84,13 @@ public class ConfigUtil {
 	 * 加载配置
 	 */
 	public static void loadConfigs() {
-		log.debug("插件工作空间位置：" + workPlugPath);
-		log.debug("插件安装位置：" + plugPath);
 		File plugPathFile = new File(plugPath);
+		log.debug("插件安装位置：" + plugPath);
 		if(!plugPathFile.exists()) {
 			plugPathFile.mkdirs();
 		}
 		File workPathFile = new File(workPlugPath);
+		log.debug("插件在工作空间位置：" + workPlugPath);
 		if(!workPathFile.exists()) {
 			workPathFile.mkdirs();
 		}
@@ -122,6 +134,10 @@ public class ConfigUtil {
 
 	public static String getOutPath() {
 		return outPath;
+	}
+
+	public static String getFileType() {
+		return fileType;
 	}
 	
 }
