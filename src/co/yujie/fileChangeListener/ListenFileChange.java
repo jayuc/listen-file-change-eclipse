@@ -63,8 +63,11 @@ public class ListenFileChange implements IStartup {
 						 * 执行一个js编译器
 						 */
 						if(Judger.haveConfig() 
+								&& Judger.checkProject(info)
 								&& Judger.mateContext(info)) {
 							Compiler.compile(info);   //开始编译js文件
+						}else {
+							log.debug("配置不匹配，不进行编译");
 						}
 						
 					}
@@ -112,7 +115,9 @@ public class ListenFileChange implements IStartup {
         if(null != editor) {
         	FileEditorInput input = (FileEditorInput) editor.getEditorInput();
         	IFile file = input.getFile();
-        	return new FileChangeInfo(file.getFullPath().toString(), getKind(event.getDelta().getKind()), file.getFileExtension(), file.getName(), input.getStorage().toString(), file.getLocation().toString());
+        	return new FileChangeInfo(file.getFullPath().toString(), getKind(event.getDelta().getKind()), 
+        			file.getFileExtension(), file.getName(), input.getStorage().toString(), file.getLocation().toString(), 
+        			file.getProject().getName(), file.getProject().getLocation().toString());
         }
         return null;
 	}

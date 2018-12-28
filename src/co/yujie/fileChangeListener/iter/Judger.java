@@ -25,11 +25,25 @@ public class Judger {
 				&& null != ConfigUtil.getContext() 
 				&& null != ConfigUtil.getOutPath() 
 				&& null != ConfigUtil.getModel() 
+				&& null != ConfigUtil.getProjectName()
 				&& "js".equals(ConfigUtil.getFileType())) {
 			log.debug("配置文件成功加载，生效的文件类型：" + ConfigUtil.getFileType());
 			return true;
 		}
 		log.debug("配置文件未成功加载");
+		return false;
+	}
+	
+	/**
+	 * 核对项目名与配置的项目名是否一致
+	 * @param info
+	 * @return
+	 */
+	public static boolean checkProject(FileChangeInfo info) {
+		if(info.getProjectName().equals(ConfigUtil.getProjectName())) {
+			return true;
+		}
+		log.debug("项目名不对");
 		return false;
 	}
 	
@@ -45,11 +59,11 @@ public class Judger {
 		if(null != info 
 				&& FileOperate.CHANGE == info.getOpear() 
 				&& null != info.getLocation()) {
-			if(info.getLocation().startsWith(ConfigUtil.getContext())) {
+			if(info.getLocation().startsWith(info.getProjectLocation() + ConfigUtil.getContext())) {
 				return true;
 			}
 			log.debug("变化文件位置：" + info.getLocation());
-			log.debug("配置输入文件位置：" + ConfigUtil.getContext());
+			log.debug("配置输入文件位置：" + info.getProjectLocation() + ConfigUtil.getContext());
 			return false;
 		}
 		log.debug("没有变化的文件或信息不完整");

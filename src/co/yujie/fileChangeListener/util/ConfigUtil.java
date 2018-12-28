@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
 
 /**
@@ -31,6 +32,11 @@ public class ConfigUtil {
 	private static String outPath = null;
 	
 	/**
+	 * 需要编译的项目名
+	 */
+	private static String projectName = null;
+	
+	/**
 	 * 编译模式  开发环境/生产环境,默认开发环境
 	 */
 	private static String model = "development";
@@ -39,6 +45,11 @@ public class ConfigUtil {
 	 * 生效的文件类型
 	 */
 	private static String fileType = "js";
+	
+	/**
+	 * 生效的文件名
+	 */
+	private static String fileName = "index.js";
 	
 	/**
 	 * 插件工作空间位置
@@ -69,9 +80,14 @@ public class ConfigUtil {
 			webpackPrefix = properties.getProperty("webpackPrefix");
 			context = properties.getProperty("context");
 			outPath = properties.getProperty("outPath");
+			projectName = properties.getProperty("projectName");
 			String outP = properties.getProperty("model");
 			if(null != outP) {
 				model = outP;
+			}
+			String fileN = properties.getProperty("fileName");
+			if(null != fileN) {
+				fileName = fileN;
 			}
 			String fileT = properties.getProperty("fileType");
 			if(null != fileT) {
@@ -138,6 +154,14 @@ public class ConfigUtil {
 
 	public static String getFileType() {
 		return fileType;
+	}
+
+	public static String getFileName() {
+		return fileName;
+	}
+
+	public static String getProjectName() {
+		return projectName;
 	}
 	
 }

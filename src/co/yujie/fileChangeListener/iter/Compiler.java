@@ -52,10 +52,10 @@ public final class Compiler {
 				setStatus(Boolean.TRUE);
 				IAction action = new JsAction();
 				Map<String, Object> data = new HashMap<String, Object>();
-				data.put("compiler", compiler);
 				data.put("fileChangeInfo", info);
 				action.execute(data);
 				log.debug("Ω· ¯±‡“Î");
+				setStatus(Boolean.FALSE);
 			});
 		}
 	}
