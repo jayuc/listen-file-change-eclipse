@@ -46,13 +46,13 @@ public class JsAction implements IAction {
 		 * 刷新文件
 		 * 注意：eclipse以外的外部编辑器修改文件后不会使文件在eclipse中刷新
 		 */
-		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("a/src/html"));
-		try {
-			System.out.println(file.exists());
-			file.refreshLocal(IResource.DEPTH_ONE, null);
-		} catch (CoreException e) {
-			log.error("刷新文件失败");
-		}
+//		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("a/src/html"));
+//		try {
+//			System.out.println(file.exists());
+//			file.refreshLocal(IResource.DEPTH_ONE, null);
+//		} catch (CoreException e) {
+//			log.error("刷新文件失败");
+//		}
 		
 	}
 
