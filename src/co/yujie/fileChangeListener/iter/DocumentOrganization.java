@@ -74,6 +74,22 @@ public class DocumentOrganization {
 		return null;
 	}
 	
+	/**
+	 * 获取输出文件
+	 * @return
+	 */
+	public String getOutFile() {
+		return ConfigUtil.getProjectName() + outPath + outName;
+	}
+	
+	/**
+	 * 获取输出文件的绝对路径
+	 * @return
+	 */
+	public String getAbsoluteOutFile() {
+		return projectPath + outPath + outName;
+	}
+	
 	private String findPath(String context, String sep) {
 		log.debug("context:" + context);
 		log.debug("sep:" + sep);

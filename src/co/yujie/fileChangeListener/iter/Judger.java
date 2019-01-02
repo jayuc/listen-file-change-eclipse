@@ -40,8 +40,14 @@ public class Judger {
 	 * @return
 	 */
 	public static boolean checkProject(FileChangeInfo info) {
-		if(info.getProjectName().equals(ConfigUtil.getProjectName())) {
-			return true;
+		String projectName = ConfigUtil.getProjectName();
+		if(null != projectName) {
+			String[] PNames = projectName.split("/");
+			for(int i=0; i<PNames.length; i++) {
+				if(info.getProjectName().equals(PNames[i])) {
+					return true;
+				}
+			}
 		}
 		log.debug("项目名不对");
 		return false;

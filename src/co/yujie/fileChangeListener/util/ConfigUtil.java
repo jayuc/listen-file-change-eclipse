@@ -37,6 +37,11 @@ public class ConfigUtil {
 	private static String projectName = null;
 	
 	/**
+	 * 真实的项目名，不包含父项目
+	 */
+	private static String recentProjectName = null;
+	
+	/**
 	 * 编译模式  开发环境/生产环境,默认开发环境
 	 */
 	private static String model = "development";
@@ -52,6 +57,11 @@ public class ConfigUtil {
 	private static String fileName = "index.js";
 	
 	/**
+	 * eclipse 工作空间位置
+	 */
+	private final static String workPath;
+	
+	/**
 	 * 插件工作空间位置
 	 */
 	private final static String workPlugPath;
@@ -64,6 +74,7 @@ public class ConfigUtil {
 	private final static Logger log = LogUtil.getLog(ConfigUtil.class);
 	
 	static {
+		workPath = Platform.getInstanceLocation().getURL().getPath();
 		workPlugPath = Platform.getInstanceLocation().getURL().getPath() + 
 				".metadata/.plugins/co.yujie.fileChangeListener/";
 		plugPath = Platform.getInstallLocation().getURL().getPath() + 
@@ -81,6 +92,7 @@ public class ConfigUtil {
 			context = properties.getProperty("context");
 			outPath = properties.getProperty("outPath");
 			projectName = properties.getProperty("projectName");
+			recentProjectName = properties.getProperty("recentProjectName");
 			String outP = properties.getProperty("model");
 			if(null != outP) {
 				model = outP;
@@ -162,6 +174,14 @@ public class ConfigUtil {
 
 	public static String getProjectName() {
 		return projectName;
+	}
+
+	public static String getWorkpath() {
+		return workPath;
+	}
+
+	public static String getRecentProjectName() {
+		return recentProjectName;
 	}
 	
 }
