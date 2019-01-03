@@ -17,8 +17,6 @@ import co.yujie.fileChangeListener.util.LogUtil;
  */
 public final class Compiler {
 	
-	private final static Compiler compiler = new Compiler();
-	
 	private final static ExecutorService executor = Executors.newFixedThreadPool(1);
 	
 	private final static Object statusLock = new Object();
@@ -77,25 +75,25 @@ public final class Compiler {
 		return false;
 	}
 
-	private static boolean isStatus() {
+	public static boolean isStatus() {
 		synchronized (statusLock) {
 			return status;
 		}
 	}
 
-	private static void setStatus(boolean status) {
+	public static void setStatus(boolean status) {
 		synchronized (statusLock) {
 			Compiler.status = status;
 		}
 	}
 
-	private static boolean isRemain() {
+	public static boolean isRemain() {
 		synchronized (remainLock) {
 			return remain;
 		}
 	}
 
-	private static void setRemain(boolean remain) {
+	public static void setRemain(boolean remain) {
 		synchronized (remainLock) {
 			Compiler.remain = remain;
 		}

@@ -33,6 +33,11 @@ public class DocumentOrganization {
 	private String outPath = null;
 	
 	/**
+	 * 输出文件在tomcat中的位置，不是真实的代码，是为了解决tomcat中的缓存问题
+	 */
+	private String webOutPath = null;
+	
+	/**
 	 * 输出文件名
 	 */
 	private String outName = null;
@@ -79,7 +84,11 @@ public class DocumentOrganization {
 	 * @return
 	 */
 	public String getOutFile() {
-		return ConfigUtil.getProjectName() + outPath + outName;
+		if(null != outPath 
+				&& null != outName) {
+			return ConfigUtil.getProjectName() + outPath + outName;
+		}
+		return null;
 	}
 	
 	/**
@@ -87,7 +96,25 @@ public class DocumentOrganization {
 	 * @return
 	 */
 	public String getAbsoluteOutFile() {
-		return projectPath + outPath + outName;
+		if(null != projectPath 
+				&& null != outPath 
+				&& null != outName) {
+			return projectPath + outPath + outName;
+		}
+		return null;
+	}
+	
+	/**
+	 * 输出文件在web中的绝对位置
+	 * @return
+	 */
+	public String getWebAbsoluteOutFile() {
+		if(null != webOutPath 
+				&& null != outName) {
+			return ConfigUtil.getWorkpath() + ".metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/" + 
+					ConfigUtil.getRecentProjectName() + webOutPath + outName;
+		}
+		return null;
 	}
 	
 	private String findPath(String context, String sep) {
@@ -114,10 +141,13 @@ public class DocumentOrganization {
 			entryPath = "." + fix;
 			if("/".equals(fix)) {
 				outPath = ConfigUtil.getOutPath() + "/";
+				webOutPath = ConfigUtil.getWebFilePath() + "/";
 				outName = ConfigUtil.getFileName();
 			}else {
 				fix = fix.substring(0, fix.lastIndexOf("/"));
-				outPath = ConfigUtil.getOutPath() + fix.substring(0, fix.lastIndexOf("/") + 1);
+				String ftemp = fix.substring(0, fix.lastIndexOf("/") + 1);
+				outPath = ConfigUtil.getOutPath() + ftemp;
+				webOutPath = ConfigUtil.getWebFilePath() + ftemp;
 				outName = fix.substring(fix.lastIndexOf("/") + 1, fix.length()) + ".js";
 			}
 			log.debug("entryPath:" + entryPath);

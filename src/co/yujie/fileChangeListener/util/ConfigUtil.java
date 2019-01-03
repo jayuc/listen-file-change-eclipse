@@ -42,6 +42,11 @@ public class ConfigUtil {
 	private static String recentProjectName = null;
 	
 	/**
+	 * 输出文件在tomcat中的位置，不是真实的代码，是为了解决tomcat中的缓存问题
+	 */
+	private static String webFilePath = null;
+	
+	/**
 	 * 编译模式  开发环境/生产环境,默认开发环境
 	 */
 	private static String model = "development";
@@ -93,6 +98,7 @@ public class ConfigUtil {
 			outPath = properties.getProperty("outPath");
 			projectName = properties.getProperty("projectName");
 			recentProjectName = properties.getProperty("recentProjectName");
+			webFilePath = properties.getProperty("webFilePath");
 			String outP = properties.getProperty("model");
 			if(null != outP) {
 				model = outP;
@@ -182,6 +188,10 @@ public class ConfigUtil {
 
 	public static String getRecentProjectName() {
 		return recentProjectName;
+	}
+
+	public static String getWebFilePath() {
+		return webFilePath;
 	}
 	
 }

@@ -36,17 +36,33 @@ public class JsAction implements IAction {
 		String command = doc.createWebpackCommand();
 		log.debug("webpack命令：" + command);
 		
-		String result = "编译成功！";
-		try {
-			Runtime.getRuntime().exec(command);
-		} catch (IOException e) {
-			result = "编译失败！";
-		} finally {
-			log.debug(result);
+		String result = "编译失败！";
+
+		if(null != command) {
+			Process process = null;
+			try {
+				process = Runtime.getRuntime().exec(command);
+				process.waitFor();
+			} catch (IOException | InterruptedException e) {
+				stopExecute();  //编译完成(退出此次编译任务)
+				log.error("编译时抛出异常,自动结束本次编译任务");
+			} finally {
+				if(process.exitValue() == 0) {
+					result = "编译成功！";
+				}
+				process.destroy();
+				process = null;
+				log.debug(result);
+			}
+			
+			log.debug("开始执行收尾任务");
+			//处理收尾工作  解决tomcat缓存问题
+			afterExecute(doc);
+		}else {
+			stopExecute();  //编译完成(退出此次编译任务)
+			log.debug("编译命令为null, " + result);
 		}
 		
-		//处理收尾工作
-		afterExecute(doc);
 		
 		/**
 		 * 刷新文件
@@ -65,19 +81,33 @@ public class JsAction implements IAction {
 	 * 执行后序收尾任务
 	 */
 	private void afterExecute(DocumentOrganization doc) {
-		File source = new File(doc.getAbsoluteOutFile());
-		String srcPath = ConfigUtil.getWorkpath() + 
-				".metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/" + 
-				ConfigUtil.getRecentProjectName();
-		System.out.println(srcPath);
-		//复制文件到tomcat中 解决tomcat缓存问题
-//		try {
-//			FileUtil.copyFileUsingFileChannels(source, null);
-//		} catch (IOException e) {
-//			log.info("source:" + doc.getAbsoluteOutFile());
-//			log.info("src:"+ srcPath);
-//			log.warn("复制文件到tomcat中失败了");
-//		}
+		String srcPath = doc.getWebAbsoluteOutFile();
+		String sourcePath = doc.getAbsoluteOutFile();
+		if(null != srcPath && null != sourcePath) {
+			File source = new File(sourcePath);
+			File src = new File(srcPath);
+			if(source.exists()) {
+				//复制文件到tomcat中 解决tomcat缓存问题
+				try {
+					FileUtil.copyFileUsingFileStreams(source, src);
+				} catch (IOException e) {
+					stopExecute();  //编译完成(退出此次编译任务)
+					log.info("sourcePath:" + doc.getAbsoluteOutFile());
+					log.info("srcPath:"+ srcPath);
+					log.error("复制文件到tomcat中失败了,自动结束此次任务");
+				}
+			}
+		}else {
+			log.debug("srcPath:" + srcPath);
+			log.debug("sourcePath:" + sourcePath);
+		}
+	}
+	
+	/**
+	 * 结束此次编译
+	 */
+	private void stopExecute() {
+		Compiler.setStatus(Boolean.FALSE);
 	}
 
 }
